@@ -1,0 +1,19 @@
+---
+import Alert from '../components/Alert.astro'
+import '../css/style.css'
+const color = 'white';
+---
+<html>
+    <meta charset="UTF-8">
+    <h1>なにかかいてる</h1>
+    <Alert />
+    <p class="alert">警告再利用</p>
+</html>
+<style define:vars={{color}}>
+    h1 {
+        color: green;
+    }
+    body {
+        color: var(--color);
+    }
+</style>
