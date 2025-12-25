@@ -1,0 +1,12 @@
+# robots.txt for https://h-sakane.github.io/AstroTest/
+
+# すべてのクローラーを許可
+User-agent: *
+Allow: /
+
+# サイトマップの場所を指定
+Sitemap: https://h-sakane.github.io/AstroTest/sitemap-index.xml
+
+# 特定のパスを除外する場合（必要に応じてコメント解除）
+# Disallow: /admin/
+# Disallow: /private/

@@ -4,21 +4,46 @@ import { ViewTransitions } from 'astro:transitions'
 const { title, description, url, image, author } = Astro.props
 
 let subtitle = 'Accessible Astro Starter'
+const canonicalURL = new URL(Astro.url.pathname, Astro.site)
+const fullImageUrl = new URL(image, Astro.site).toString()
 ---
 
 <!-- general meta -->
+<meta charset="UTF-8" />
 <meta name="title" content={`${title} - ${subtitle}`} />
 <meta name="description" content={description} />
 <meta name="author" content={author} />
+<link rel="canonical" href={canonicalURL} />
 
 <!-- open graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
 <meta property="og:title" content={`${title} - ${subtitle}`} />
 <meta property="og:description" content={description} />
-<meta property="og:type" content="website" />
-<meta property="og:url" content={url} />
-<meta property="og:image" content={`${Astro.site}${image}`} />
+<meta property="og:image" content={fullImageUrl} />
+<meta property="og:locale" content="ja_JP" />
+<meta property="og:site_name" content={subtitle} />
 
 <!-- twitter card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalURL} />
+<meta name="twitter:title" content={`${title} - ${subtitle}`} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={fullImageUrl} />
+
+<!-- structured data (JSON-LD) -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": subtitle,
+  "url": Astro.site,
+  "description": description,
+  "inLanguage": "ja",
+  "author": {
+    "@type": "Person",
+    "name": author
+  }
+})} />
 
 <!-- page title -->
 <title>{title} - {subtitle}</title>
