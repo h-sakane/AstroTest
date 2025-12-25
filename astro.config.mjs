@@ -7,7 +7,8 @@ import icon from 'astro-icon'
 // https://astro.build/config
 export default defineConfig({
   compressHTML: true,
-  site: 'https://accessible-astro.netlify.app',
+  site: 'https://h-sakane.github.io',
+  base: '/AstroTest',
   integrations: [
     mdx(),
     icon(),
