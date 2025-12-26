@@ -10,6 +10,13 @@ export default defineConfig({
   compressHTML: true,
   site: 'https://h-sakane.github.io',
   base: '/AstroTest',
+  i18n: {
+    defaultLocale: 'ja',
+    locales: ['ja', 'en'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   integrations: [
     mdx(),
     icon(),

@@ -1,0 +1,196 @@
+---
+import DefaultLayout from '../../../layouts/DefaultLayout.astro'
+
+export async function getStaticPaths() {
+  const tournaments = [
+    {
+      id: '1',
+      title: '1st Official Tournament',
+      date: '2026-01-15',
+      status: 'Recruiting',
+      participants: 32,
+      prize: '$1,000',
+      entryDeadline: '2026-01-10',
+      content: `
+## Tournament Overview
+
+Registration is now open for the 1st official tournament!
+
+## Schedule
+
+- Date: January 15, 2026 (Wed)
+- Start Time: 7:00 PM
+- Estimated End: 10:00 PM
+
+## Entry Requirements
+
+- Level 50+ account
+- Official Discord server membership
+- Registration before deadline
+
+## Prizes
+
+- 1st Place: $500
+- 2nd Place: $300
+- 3rd Place: $200
+
+## How to Register
+
+Register via the form below.
+[Registration Form](#)
+
+## Rules
+
+Detailed rules available on official Discord.
+      `,
+    },
+    {
+      id: '2',
+      title: 'Community Cup Vol.3',
+      date: '2025-12-28',
+      status: 'Scheduled',
+      participants: 16,
+      prize: 'None',
+      content: `
+## About Community Cup
+
+An unofficial tournament for community members.
+
+## Schedule
+
+- Date: December 28, 2025 (Sat)
+- Start Time: 2:00 PM
+
+## How to Participate
+
+Express interest on Discord.
+      `,
+    },
+    {
+      id: '3',
+      title: 'Year-End Tournament',
+      date: '2025-12-30',
+      status: 'Full',
+      participants: 64,
+      prize: '$500',
+      content: `
+## Year-End Tournament
+
+Major year-end tournament.
+Registration is now closed.
+
+## Schedule
+
+- Date: December 30, 2025 (Mon)
+- Start Time: 6:00 PM
+      `,
+    },
+    {
+      id: '4',
+      title: 'Community Cup Vol.2',
+      date: '2025-11-20',
+      status: 'Finished',
+      winner: 'Player A',
+      content: `
+## Tournament Results
+
+Community Cup Vol.2 has concluded.
+
+## Final Rankings
+
+1. Player A
+2. Player B
+3. Player C
+
+## Highlights
+
+Intense matches were held!
+      `,
+    },
+    {
+      id: '5',
+      title: 'Autumn Cup',
+      date: '2025-10-15',
+      status: 'Finished',
+      winner: 'Player B',
+      content: `
+## Tournament Results
+
+Autumn Cup has concluded.
+
+## Final Rankings
+
+1. Player B
+2. Player D
+3. Player E
+      `,
+    },
+  ]
+
+  return tournaments.map((tournament) => ({
+    params: { id: tournament.id },
+    props: { tournament },
+  }))
+}
+
+const { tournament } = Astro.props
+---
+
+<DefaultLayout title={tournament.title} description={`Details for ${tournament.title}`}>
+  <section class="my-12">
+    <div class="space-content container">
+      <a href="/en/tournaments" class="text-sm hover:underline">← Back to Tournament List</a>
+      <h1 class="mt-4">{tournament.title}</h1>
+      <div class="flex items-center gap-4 text-sm text-gray-600 mt-2">
+        <span
+          class={`px-3 py-1 rounded-full text-sm font-bold ${
+            tournament.status === 'Recruiting'
+              ? 'bg-green-500 text-white'
+              : tournament.status === 'Full'
+                ? 'bg-red-500 text-white'
+                : tournament.status === 'Finished'
+                  ? 'bg-gray-500 text-white'
+                  : 'bg-blue-500 text-white'
+          }`}
+        >
+          {tournament.status}
+        </span>
+        <span>Date: {tournament.date}</span>
+        {tournament.participants && <span>Slots: {tournament.participants}</span>}
+        {tournament.prize && <span>Prize: {tournament.prize}</span>}
+      </div>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="space-content container">
+      <div class="prose max-w-none" set:html={tournament.content} />
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <a href="/en/tournaments" class="btn btn-primary">← Back to Tournament List</a>
+    </div>
+  </section>
+</DefaultLayout>
+
+<style>
+  .prose {
+    line-height: 1.8;
+  }
+  .prose h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .prose p {
+    margin-bottom: 1rem;
+  }
+  .prose ol,
+  .prose ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+</style>

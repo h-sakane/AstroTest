@@ -1,0 +1,127 @@
+---
+import DefaultLayout from '../../../layouts/DefaultLayout.astro'
+import { Card } from 'accessible-astro-components'
+
+const tournaments = [
+  {
+    id: 1,
+    title: '1st Official Tournament',
+    date: '2026-01-15',
+    status: 'Recruiting',
+    participants: 32,
+    prize: '$1,000',
+    description: 'Registration now open for the 1st official tournament.',
+  },
+  {
+    id: 2,
+    title: 'Community Cup Vol.3',
+    date: '2025-12-28',
+    status: 'Scheduled',
+    participants: 16,
+    prize: 'None',
+    description: 'Unofficial tournament for community members.',
+  },
+  {
+    id: 3,
+    title: 'Year-End Tournament',
+    date: '2025-12-30',
+    status: 'Full',
+    participants: 64,
+    prize: '$500',
+    description: 'Registration is closed for this major year-end tournament.',
+  },
+]
+
+const pastTournaments = [
+  {
+    id: 4,
+    title: 'Community Cup Vol.2',
+    date: '2025-11-20',
+    status: 'Finished',
+    winner: 'Player A',
+    description: 'Results from the previous Community Cup.',
+  },
+  {
+    id: 5,
+    title: 'Autumn Cup',
+    date: '2025-10-15',
+    status: 'Finished',
+    winner: 'Player B',
+    description: 'Results from the autumn tournament.',
+  },
+]
+---
+
+<DefaultLayout
+  title="Tournaments"
+  description="Upcoming tournaments, past results, and registration information"
+>
+  <section class="my-12">
+    <div class="space-content container">
+      <h1>Tournaments</h1>
+      <p class="text-2xl">
+        Check upcoming tournaments and past results here.
+      </p>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <h2 class="text-3xl font-bold mb-6">Upcoming & Recruiting</h2>
+      <ul class="my-3">
+        {
+          tournaments.map((tournament) => (
+            <li>
+              <Card
+                url={`/en/tournaments/${tournament.id}`}
+                title={tournament.title}
+                footer={`Date: ${tournament.date} | Slots: ${tournament.participants} | Prize: ${tournament.prize}`}
+              >
+                <div class="flex items-center gap-2 mb-2">
+                  <span
+                    class={`px-3 py-1 rounded-full text-sm font-bold ${
+                      tournament.status === 'Recruiting'
+                        ? 'bg-green-500 text-white'
+                        : tournament.status === 'Full'
+                          ? 'bg-red-500 text-white'
+                          : 'bg-blue-500 text-white'
+                    }`}
+                  >
+                    {tournament.status}
+                  </span>
+                </div>
+                {tournament.description}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <h2 class="text-3xl font-bold mb-6">Past Tournaments</h2>
+      <ul class="my-3">
+        {
+          pastTournaments.map((tournament) => (
+            <li>
+              <Card
+                url={`/en/tournaments/${tournament.id}`}
+                title={tournament.title}
+                footer={`Date: ${tournament.date} | Winner: ${tournament.winner}`}
+              >
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="px-3 py-1 rounded-full text-sm font-bold bg-gray-500 text-white">
+                    {tournament.status}
+                  </span>
+                </div>
+                {tournament.description}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</DefaultLayout>

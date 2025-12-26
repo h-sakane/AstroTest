@@ -1,0 +1,100 @@
+---
+import DefaultLayout from '../../../layouts/DefaultLayout.astro'
+import { Card } from 'accessible-astro-components'
+
+const tools = [
+  {
+    id: 1,
+    title: 'Damage Calculator',
+    description: 'Calculate character damage accurately.',
+    category: 'Calculator',
+    icon: '🔢',
+  },
+  {
+    id: 2,
+    title: 'Team Composition Simulator',
+    description: 'Simulate optimal team compositions.',
+    category: 'Simulator',
+    icon: '👥',
+  },
+  {
+    id: 3,
+    title: 'Character Database',
+    description: 'Search all character stats and skills.',
+    category: 'Database',
+    icon: '📊',
+  },
+  {
+    id: 4,
+    title: 'Timer & Stopwatch',
+    description: 'Timer tool for training and tournaments.',
+    category: 'Utility',
+    icon: '⏱️',
+  },
+]
+---
+
+<DefaultLayout
+  title="Useful Tools"
+  description="Collection of useful tools including damage calculator, simulator, and database"
+>
+  <section class="my-12">
+    <div class="space-content container">
+      <h1>Useful Tools</h1>
+      <p class="text-2xl">
+        We provide convenient tools to support your gameplay.
+      </p>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <div class="mb-6">
+        <label for="tool-category-filter" class="mr-2">Category:</label>
+        <select id="tool-category-filter" class="px-4 py-2 border rounded">
+          <option value="all">All</option>
+          <option value="Calculator">Calculator</option>
+          <option value="Simulator">Simulator</option>
+          <option value="Database">Database</option>
+          <option value="Utility">Utility</option>
+        </select>
+      </div>
+
+      <ul class="my-3">
+        {
+          tools.map((tool) => (
+            <li data-category={tool.category}>
+              <Card
+                url={`/en/tools/${tool.id}`}
+                title={`${tool.icon} ${tool.title}`}
+                footer={`Category: ${tool.category}`}
+              >
+                {tool.description}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</DefaultLayout>
+
+<script>
+  const filterSelect = document.getElementById('tool-category-filter')
+  const toolItems = document.querySelectorAll('[data-category]')
+
+  if (filterSelect) {
+    filterSelect.addEventListener('change', (e) => {
+      const selectedCategory = (e.target as HTMLSelectElement).value
+
+      toolItems.forEach((item) => {
+        const category = item.getAttribute('data-category')
+        if (selectedCategory === 'all' || category === selectedCategory) {
+          ;(item as HTMLElement).style.display = 'block'
+        } else {
+          ;(item as HTMLElement).style.display = 'none'
+        }
+      })
+    })
+  }
+</script>

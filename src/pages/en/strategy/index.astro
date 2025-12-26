@@ -1,0 +1,93 @@
+---
+import DefaultLayout from '../../../layouts/DefaultLayout.astro'
+import { Card } from 'accessible-astro-components'
+
+// Strategy information sample data
+const strategies = [
+  {
+    id: 1,
+    title: 'Beginner\'s Guide',
+    description: 'Basic strategy information for newcomers to the game.',
+    category: 'Basics',
+    lastUpdated: '2025-12-20',
+  },
+  {
+    id: 2,
+    title: 'Character Development',
+    description: 'Learn how to efficiently develop your characters.',
+    category: 'Development',
+    lastUpdated: '2025-12-18',
+  },
+  {
+    id: 3,
+    title: 'Advanced Techniques',
+    description: 'High-level techniques for competitive play.',
+    category: 'Advanced',
+    lastUpdated: '2025-12-15',
+  },
+]
+---
+
+<DefaultLayout
+  title="Strategy Guides"
+  description="Strategy guides for all skill levels, from beginners to advanced players"
+>
+  <section class="my-12">
+    <div class="space-content container">
+      <h1>Strategy Guides</h1>
+      <p class="text-2xl">
+        Comprehensive strategy information useful for players of all levels.
+      </p>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <div class="mb-6">
+        <label for="category-filter" class="mr-2">Category:</label>
+        <select id="category-filter" class="px-4 py-2 border rounded">
+          <option value="all">All</option>
+          <option value="Basics">Basics</option>
+          <option value="Development">Development</option>
+          <option value="Advanced">Advanced</option>
+        </select>
+      </div>
+
+      <ul class="my-3">
+        {
+          strategies.map((strategy) => (
+            <li data-category={strategy.category}>
+              <Card
+                url={`/en/strategy/${strategy.id}`}
+                title={strategy.title}
+                footer={`Category: ${strategy.category} | Last Updated: ${strategy.lastUpdated}`}
+              >
+                {strategy.description}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</DefaultLayout>
+
+<script>
+  const filterSelect = document.getElementById('category-filter')
+  const strategyItems = document.querySelectorAll('[data-category]')
+
+  if (filterSelect) {
+    filterSelect.addEventListener('change', (e) => {
+      const selectedCategory = (e.target as HTMLSelectElement).value
+
+      strategyItems.forEach((item) => {
+        const category = item.getAttribute('data-category')
+        if (selectedCategory === 'all' || category === selectedCategory) {
+          ;(item as HTMLElement).style.display = 'block'
+        } else {
+          ;(item as HTMLElement).style.display = 'none'
+        }
+      })
+    })
+  }
+</script>

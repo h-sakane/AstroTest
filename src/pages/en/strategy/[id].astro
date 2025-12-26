@@ -1,0 +1,126 @@
+---
+import DefaultLayout from '../../../layouts/DefaultLayout.astro'
+
+export async function getStaticPaths() {
+  const strategies = [
+    {
+      id: '1',
+      title: 'Beginner\'s Guide',
+      category: 'Basics',
+      content: `
+## Introduction
+
+This guide covers basic controls and early game progression for newcomers.
+
+## Basic Controls
+
+- Movement: WASD or Arrow Keys
+- Jump: Space Bar
+- Action: Left Mouse Click
+
+## Early Game Tips
+
+1. Complete the tutorial
+2. Obtain your first character
+3. Progress through story mode
+
+## Summary
+
+Master the basics and get familiar with the game.
+      `,
+      lastUpdated: '2025-12-20',
+    },
+    {
+      id: '2',
+      title: 'Character Development',
+      category: 'Development',
+      content: `
+## Character Development Basics
+
+Learn efficient development strategies.
+
+## Priority Development Areas
+
+1. Level up
+2. Skill enhancement
+3. Equipment upgrades
+
+## Recommended Development Path
+
+Details on optimal development routes.
+      `,
+      lastUpdated: '2025-12-18',
+    },
+    {
+      id: '3',
+      title: 'Advanced Techniques',
+      category: 'Advanced',
+      content: `
+## Advanced Techniques
+
+Techniques for competitive-level play.
+
+## Combo Techniques
+
+Advanced combo strategies explained.
+
+## Tactical Positioning
+
+Practical positioning tips for real matches.
+      `,
+      lastUpdated: '2025-12-15',
+    },
+  ]
+
+  return strategies.map((strategy) => ({
+    params: { id: strategy.id },
+    props: { strategy },
+  }))
+}
+
+const { strategy } = Astro.props
+---
+
+<DefaultLayout title={strategy.title} description={`Detailed strategy guide for ${strategy.title}`}>
+  <section class="my-12">
+    <div class="space-content container">
+      <a href="/en/strategy" class="text-sm hover:underline">← Back to Strategy List</a>
+      <h1 class="mt-4">{strategy.title}</h1>
+      <p class="text-sm text-gray-600">
+        Category: {strategy.category} | Last Updated: {strategy.lastUpdated}
+      </p>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="space-content container">
+      <div class="prose max-w-none" set:html={strategy.content} />
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <a href="/en/strategy" class="btn btn-primary">← Back to Strategy List</a>
+    </div>
+  </section>
+</DefaultLayout>
+
+<style>
+  .prose {
+    line-height: 1.8;
+  }
+  .prose h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .prose p {
+    margin-bottom: 1rem;
+  }
+  .prose ol,
+  .prose ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+</style>

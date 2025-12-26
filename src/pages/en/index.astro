@@ -1,9 +1,9 @@
 ---
-import DefaultLayout from '../layouts/DefaultLayout.astro'
-import GameHero from '../components/GameHero.astro'
-import Feature from '../components/Feature.astro'
-import Counter from '../components/Counter.astro'
-import ContentMedia from '../components/ContentMedia.astro'
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import GameHero from '../../components/GameHero.astro'
+import Feature from '../../components/Feature.astro'
+import Counter from '../../components/Counter.astro'
+import ContentMedia from '../../components/ContentMedia.astro'
 import { Accordion, AccordionItem } from 'accessible-astro-components'
 import { Icon } from 'astro-icon/components'
 ---
@@ -11,38 +11,38 @@ import { Icon } from 'astro-icon/components'
 <DefaultLayout title="Home">
   <GameHero />
   
-  <!-- コンテンツへのクイックリンク -->
+  <!-- Quick Links to Contents -->
   <section class="my-32">
     <div class="container">
-      <h2 class="mb-12 text-5xl text-center font-bold">サイトコンテンツ</h2>
+      <h2 class="mb-12 text-5xl text-center font-bold">Site Contents</h2>
       <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-        <a href="/strategy" class="quick-link-card">
+        <a href="/en/strategy" class="quick-link-card">
           <div class="card-icon">
             <Icon name="mdi:book-open-page-variant" />
           </div>
-          <h3 class="card-title">攻略情報</h3>
-          <p class="card-description">初心者から上級者まで役立つ攻略ガイド</p>
+          <h3 class="card-title">Strategy Guides</h3>
+          <p class="card-description">Helpful guides for all skill levels</p>
         </a>
-        <a href="/tournaments" class="quick-link-card">
+        <a href="/en/tournaments" class="quick-link-card">
           <div class="card-icon">
             <Icon name="mdi:trophy" />
           </div>
-          <h3 class="card-title">大会情報</h3>
-          <p class="card-description">開催予定の大会や過去の結果</p>
+          <h3 class="card-title">Tournaments</h3>
+          <p class="card-description">Upcoming tournaments and past results</p>
         </a>
-        <a href="/tools" class="quick-link-card">
+        <a href="/en/tools" class="quick-link-card">
           <div class="card-icon">
             <Icon name="mdi:tools" />
           </div>
-          <h3 class="card-title">便利ツール</h3>
-          <p class="card-description">ダメージ計算機やシミュレーター</p>
+          <h3 class="card-title">Useful Tools</h3>
+          <p class="card-description">Damage calculator and simulators</p>
         </a>
-        <a href="/gallery" class="quick-link-card">
+        <a href="/en/gallery" class="quick-link-card">
           <div class="card-icon">
             <Icon name="mdi:palette" />
           </div>
-          <h3 class="card-title">ギャラリー</h3>
-          <p class="card-description">ファンアート作品集</p>
+          <h3 class="card-title">Gallery</h3>
+          <p class="card-description">Fan art collection</p>
         </a>
       </div>
     </div>
@@ -88,43 +88,34 @@ import { Icon } from 'astro-icon/components'
       This theme provides plenty of tried and tested Accessible Astro Components. Some are native to this theme and a
       lot of others are integrated using a <a href="https://github.com/markteekman/accessible-astro-components"
         >separate package</a
-      >. They'll get you up and running in building an accessible solution for your visitors.
+      >.
     </p>
   </ContentMedia>
-  <ContentMedia imgSrc="/wcag-compliant.webp" reverseImg={true}>
+  <ContentMedia imgSrc="/wcag-compliant.webp" reversed>
     <h2>WCAG 2.2 AA Compliant</h2>
     <p class="text-2xl">
-      Using semantic HTML, landmarks, skip links, screen reader friendly content, aria-labels, keyboard accessible
-      navigation and components, clear outlines and tab indicators and the right color contrast, you're more certain of
-      reaching WCAG AA compliance.
+      Using semantic HTML elements and proper ARIA labels, this theme is comprehensively accessible for most people
+      browsing the web including people with disabilities.
+    </p>
+  </ContentMedia>
+  <ContentMedia imgSrc="/responsive.webp">
+    <h2>Responsive</h2>
+    <p class="text-2xl">
+      Apart from being accessible, this theme is fully responsive and works across all screen sizes and most modern
+      browsers, with a preference towards Chromium based browsers.
     </p>
   </ContentMedia>
   <section class="my-64">
-    <div class="container grid grid-cols-1 gap-12 md:grid-cols-2">
-      <div class="flex flex-col items-start gap-4">
-        <h2 class="text-6xl">FAQ</h2>
-        <p class="text-2xl">
-          This section demonstrates how to effectively use the Accordion component to organize and display frequently
-          asked questions in an accessible and user-friendly way.
-        </p>
-        <a class="button" href="/faq">Contact support team</a>
-      </div>
+    <div class="container">
+      <h2 class="mb-16 text-6xl">FAQ</h2>
       <div class="space-content">
         <Accordion>
-          <AccordionItem name="exclusive" title="What is WCAG and why is it important?" open>
+          <AccordionItem name="exclusive" title="What is web accessibility and why is it important?">
             <p>
-              WCAG (Web Content Accessibility Guidelines) is a set of internationally recognized standards for web
-              accessibility. Following WCAG ensures your website is usable by people with various disabilities,
-              including visual, auditory, physical, and cognitive impairments. It's important not just for
-              accessibility, but also for legal compliance, SEO, and reaching a wider audience.
-            </p>
-          </AccordionItem>
-          <AccordionItem name="exclusive" title="What's the difference between ARIA labels and alt text?">
-            <p>
-              Alt text is specifically for describing images to screen reader users, while ARIA labels (aria-label,
-              aria-labelledby) can describe any element on a page. Alt text is HTML's native way to provide alternative
-              text for images, while ARIA labels are part of the ARIA specification that helps make dynamic content and
-              advanced UI controls more accessible.
+              Web accessibility ensures that websites, tools, and technologies are designed and developed so that people
+              with disabilities can use them. This includes individuals with visual, auditory, physical, speech,
+              cognitive, and neurological disabilities. Making your website accessible is not only ethical and often
+              legally required, but it also improves the experience for all users and can increase your audience reach.
             </p>
           </AccordionItem>
           <AccordionItem name="exclusive" title="Why is keyboard navigation important?">

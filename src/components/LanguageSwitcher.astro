@@ -1,0 +1,130 @@
+---
+import { Icon } from 'astro-icon/components'
+
+const { currentLang = 'ja' } = Astro.props
+const base = import.meta.env.BASE_URL
+// Remove base path and /en prefix to get the clean path
+let cleanPath = Astro.url.pathname.replace(base, '').replace(/^\/en/, '').replace(/\/$/, '') || '/'
+
+// Generate locale-aware URLs with base path
+const jaUrl = cleanPath === '/' ? `${base}/` : `${base}${cleanPath}`
+const enUrl = cleanPath === '/' ? `${base}/en` : `${base}/en${cleanPath}`
+---
+
+<div class="language-switcher">
+  <button class="lang-toggle" aria-label="Switch language" id="lang-button">
+    <Icon name="mdi:earth" class="icon" />
+  </button>
+  <div class="lang-dropdown" id="lang-dropdown">
+    <a
+      href={jaUrl}
+      class:list={['lang-option', { active: currentLang === 'ja' }]}
+      aria-label="Switch to Japanese"
+    >
+      日本語
+    </a>
+    <a
+      href={enUrl}
+      class:list={['lang-option', { active: currentLang === 'en' }]}
+      aria-label="Switch to English"
+    >
+      English
+    </a>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const langButton = document.getElementById('lang-button')
+    const langDropdown = document.getElementById('lang-dropdown')
+
+    if (langButton && langDropdown) {
+      langButton.addEventListener('click', (e) => {
+        e.stopPropagation()
+        langDropdown.classList.toggle('show')
+      })
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', () => {
+        langDropdown.classList.remove('show')
+      })
+
+      // Prevent closing when clicking inside dropdown
+      langDropdown.addEventListener('click', (e) => {
+        e.stopPropagation()
+      })
+    }
+  })
+</script>
+
+<style lang="scss">
+  .language-switcher {
+    position: relative;
+    display: inline-block;
+  }
+
+  .lang-toggle {
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    .icon {
+      inline-size: 30px;
+      block-size: 30px;
+    }
+
+    :global(svg path) {
+      fill: var(--action-color);
+      transition: fill 0.2s ease-in-out;
+    }
+
+    &:hover {
+      :global(svg path) {
+        fill: var(--primary-400);
+      }
+    }
+  }
+
+  .lang-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background-color: var(--background);
+    border: 1px solid var(--action-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: none;
+    flex-direction: column;
+    min-width: 150px;
+    z-index: 1000;
+
+    &.show {
+      display: flex;
+    }
+  }
+
+  .lang-option {
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: var(--font-color);
+    transition: background-color 0.2s;
+    border-bottom: 1px solid var(--neutral-background);
+    white-space: nowrap;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: var(--neutral-background);
+    }
+
+    &.active {
+      background-color: var(--primary-background);
+      font-weight: bold;
+    }
+  }
+</style>
