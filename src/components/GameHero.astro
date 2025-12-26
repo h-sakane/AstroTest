@@ -1,0 +1,218 @@
+---
+// 背景動画 + ランダム画像表示 Hero コンポーネント
+const { videoSrc = '/AstroTest/videos/Chariot_NiagaraSystem切り替えテスト.mp4' } = Astro.props
+
+// public/characters/ 内の画像ファイル名リスト
+const characterImages = [
+  'Key_Green.png',
+  'Key_Red.png',
+  'Key_White.png',
+  'Key_White_Border.png',
+  'Key_Yellow.png',
+  'NEXTSTAGE.png',
+  // 残り30枚追加予定（合計36枚になる）
+]
+---
+
+<section class="game-hero">
+  <!-- 背景動画 -->
+  <video class="hero-video" autoplay muted loop playsinline id="hero-video">
+    <source src={videoSrc} type="video/mp4" />
+  </video>
+
+  <!-- 動画読み込み失敗時の代替背景 -->
+  <div class="hero-fallback" id="hero-fallback">
+    <div class="fallback-content">
+      <h1>ゲームの世界へようこそ</h1>
+      <p>攻略情報・大会情報・便利ツールを提供</p>
+    </div>
+  </div>
+
+  <!-- オーバーレイ（動画を少し暗くする） -->
+  <div class="hero-overlay"></div>
+
+  <!-- ランダム画像表示エリア -->
+  <div class="hero-content">
+    <div class="character-wrapper">
+      <div class="character-left" id="character-left"></div>
+      <div class="character-right" id="character-right"></div>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ characterImages }}>
+  // ランダムに2枚の画像を選択（重複なし）
+  function selectRandomImages(images, count = 2) {
+    const shuffled = [...images].sort(() => Math.random() - 0.5)
+    return shuffled.slice(0, count)
+  }
+
+  // DOMContentLoadedで実行
+  document.addEventListener('DOMContentLoaded', () => {
+    const video = document.getElementById('hero-video')
+    const fallback = document.getElementById('hero-fallback')
+    const leftContainer = document.getElementById('character-left')
+    const rightContainer = document.getElementById('character-right')
+    
+    // 動画読み込みエラー処理
+    if (video) {
+      video.addEventListener('error', () => {
+        video.style.display = 'none'
+        if (fallback) {
+          fallback.style.display = 'flex'
+        }
+      })
+    }
+
+    if (!leftContainer || !rightContainer) return
+
+    const selectedImages = selectRandomImages(characterImages)
+    const baseUrl = '/AstroTest/characters/'
+
+    // 画像読み込みエラー処理関数
+    function handleImageError(img) {
+      img.style.display = 'none'
+    }
+
+    // 左の画像
+    const imgLeft = document.createElement('img')
+    imgLeft.src = `${baseUrl}${selectedImages[0]}`
+    imgLeft.alt = 'Character Left'
+    imgLeft.className = 'character-image'
+    imgLeft.loading = 'eager'
+    imgLeft.addEventListener('error', () => handleImageError(imgLeft))
+    leftContainer.appendChild(imgLeft)
+
+    // 右の画像
+    const imgRight = document.createElement('img')
+    imgRight.src = `${baseUrl}${selectedImages[1]}`
+    imgRight.alt = 'Character Right'
+    imgRight.className = 'character-image'
+    imgRight.loading = 'eager'
+    imgRight.addEventListener('error', () => handleImageError(imgRight))
+    rightContainer.appendChild(imgRight)
+  })
+</script>
+
+<style lang="scss">
+  .game-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--background);
+  }
+
+  .hero-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: auto;
+    z-index: 1;
+  }
+
+  .hero-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 1;
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    .fallback-content {
+      text-align: center;
+      color: white;
+      
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        
+        @media (max-width: 768px) {
+          font-size: 2rem;
+        }
+      }
+      
+      p {
+        font-size: 1.5rem;
+        opacity: 0.9;
+        
+        @media (max-width: 768px) {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 2;
+  }
+
+  .hero-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .character-wrapper {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
+  }
+
+  .character-left,
+  .character-right {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .character-image {
+    max-width: 100%;
+    max-height: 100vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+    animation: fadeInScale 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+</style>
