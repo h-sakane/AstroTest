@@ -1,0 +1,130 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import { Card } from 'accessible-astro-components'
+
+// 大会情報のサンプルデータ
+const tournaments = [
+  {
+    id: 1,
+    title: '第1回公式大会',
+    date: '2026-01-15',
+    status: '募集中',
+    participants: 32,
+    prize: '10万円',
+    description: '第1回公式大会を開催します。エントリー受付中です。',
+  },
+  {
+    id: 2,
+    title: 'コミュニティ杯 Vol.3',
+    date: '2025-12-28',
+    status: '開催予定',
+    participants: 16,
+    prize: 'なし',
+    description: 'コミュニティメンバーで楽しむ非公式大会です。',
+  },
+  {
+    id: 3,
+    title: '年末トーナメント',
+    date: '2025-12-30',
+    status: '満員',
+    participants: 64,
+    prize: '5万円',
+    description: '年末の大型トーナメント。エントリーは締め切りました。',
+  },
+]
+
+const pastTournaments = [
+  {
+    id: 4,
+    title: 'コミュニティ杯 Vol.2',
+    date: '2025-11-20',
+    status: '終了',
+    winner: 'プレイヤーA',
+    description: '前回のコミュニティ杯の結果です。',
+  },
+  {
+    id: 5,
+    title: 'オータム杯',
+    date: '2025-10-15',
+    status: '終了',
+    winner: 'プレイヤーB',
+    description: '秋の大会の結果です。',
+  },
+]
+---
+
+<DefaultLayout
+  title="大会情報"
+  description="開催予定の大会情報、過去の大会結果、エントリー方法など"
+>
+  <section class="my-12">
+    <div class="space-content container">
+      <h1>大会情報</h1>
+      <p class="text-2xl">
+        開催予定の大会や過去の大会結果をご確認いただけます。
+      </p>
+    </div>
+  </section>
+
+  <!-- 開催予定・募集中の大会 -->
+  <section class="my-12">
+    <div class="container">
+      <h2 class="text-3xl font-bold mb-6">開催予定・募集中</h2>
+      <ul class="my-3">
+        {
+          tournaments.map((tournament) => (
+            <li>
+              <Card
+                url={`/tournaments/${tournament.id}`}
+                title={tournament.title}
+                footer={`開催日: ${tournament.date} | 参加枠: ${tournament.participants}名 | 賞金: ${tournament.prize}`}
+              >
+                <div class="flex items-center gap-2 mb-2">
+                  <span
+                    class={`px-3 py-1 rounded-full text-sm font-bold ${
+                      tournament.status === '募集中'
+                        ? 'bg-green-500 text-white'
+                        : tournament.status === '満員'
+                          ? 'bg-red-500 text-white'
+                          : 'bg-blue-500 text-white'
+                    }`}
+                  >
+                    {tournament.status}
+                  </span>
+                </div>
+                {tournament.description}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- 過去の大会 -->
+  <section class="my-12">
+    <div class="container">
+      <h2 class="text-3xl font-bold mb-6">過去の大会</h2>
+      <ul class="my-3">
+        {
+          pastTournaments.map((tournament) => (
+            <li>
+              <Card
+                url={`/tournaments/${tournament.id}`}
+                title={tournament.title}
+                footer={`開催日: ${tournament.date} | 優勝: ${tournament.winner}`}
+              >
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="px-3 py-1 rounded-full text-sm font-bold bg-gray-500 text-white">
+                    {tournament.status}
+                  </span>
+                </div>
+                {tournament.description}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</DefaultLayout>

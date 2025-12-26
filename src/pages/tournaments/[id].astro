@@ -1,0 +1,196 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+export async function getStaticPaths() {
+  const tournaments = [
+    {
+      id: '1',
+      title: '第1回公式大会',
+      date: '2026-01-15',
+      status: '募集中',
+      participants: 32,
+      prize: '10万円',
+      entryDeadline: '2026-01-10',
+      content: `
+## 大会概要
+
+第1回公式大会を開催します！ふるってご参加ください。
+
+## 開催日時
+
+- 日程: 2026年1月15日（水）
+- 開始時刻: 19:00〜
+- 予定終了時刻: 22:00
+
+## 参加条件
+
+- レベル50以上のアカウント
+- 公式Discordサーバーへの参加
+- エントリー期限までの申し込み
+
+## 賞金
+
+- 優勝: 5万円
+- 準優勝: 3万円
+- 3位: 2万円
+
+## エントリー方法
+
+下記のフォームからお申し込みください。
+[エントリーフォーム](#)
+
+## ルール
+
+詳細なルールは公式Discordで公開しています。
+      `,
+    },
+    {
+      id: '2',
+      title: 'コミュニティ杯 Vol.3',
+      date: '2025-12-28',
+      status: '開催予定',
+      participants: 16,
+      prize: 'なし',
+      content: `
+## コミュニティ杯について
+
+コミュニティメンバーで楽しむ非公式大会です。
+
+## 開催日時
+
+- 日程: 2025年12月28日（土）
+- 開始時刻: 14:00〜
+
+## 参加方法
+
+Discordで参加表明をお願いします。
+      `,
+    },
+    {
+      id: '3',
+      title: '年末トーナメント',
+      date: '2025-12-30',
+      status: '満員',
+      participants: 64,
+      prize: '5万円',
+      content: `
+## 年末トーナメント
+
+年末の大型トーナメントです。
+エントリーは締め切りました。
+
+## 開催日時
+
+- 日程: 2025年12月30日（月）
+- 開始時刻: 18:00〜
+      `,
+    },
+    {
+      id: '4',
+      title: 'コミュニティ杯 Vol.2',
+      date: '2025-11-20',
+      status: '終了',
+      winner: 'プレイヤーA',
+      content: `
+## 大会結果
+
+コミュニティ杯 Vol.2が終了しました。
+
+## 最終順位
+
+1. プレイヤーA
+2. プレイヤーB
+3. プレイヤーC
+
+## ハイライト
+
+熱戦が繰り広げられました！
+      `,
+    },
+    {
+      id: '5',
+      title: 'オータム杯',
+      date: '2025-10-15',
+      status: '終了',
+      winner: 'プレイヤーB',
+      content: `
+## 大会結果
+
+オータム杯が終了しました。
+
+## 最終順位
+
+1. プレイヤーB
+2. プレイヤーD
+3. プレイヤーE
+      `,
+    },
+  ]
+
+  return tournaments.map((tournament) => ({
+    params: { id: tournament.id },
+    props: { tournament },
+  }))
+}
+
+const { tournament } = Astro.props
+---
+
+<DefaultLayout title={tournament.title} description={`${tournament.title}の詳細情報`}>
+  <section class="my-12">
+    <div class="space-content container">
+      <a href="/tournaments" class="text-sm hover:underline">← 大会情報一覧に戻る</a>
+      <h1 class="mt-4">{tournament.title}</h1>
+      <div class="flex items-center gap-4 text-sm text-gray-600 mt-2">
+        <span
+          class={`px-3 py-1 rounded-full text-sm font-bold ${
+            tournament.status === '募集中'
+              ? 'bg-green-500 text-white'
+              : tournament.status === '満員'
+                ? 'bg-red-500 text-white'
+                : tournament.status === '終了'
+                  ? 'bg-gray-500 text-white'
+                  : 'bg-blue-500 text-white'
+          }`}
+        >
+          {tournament.status}
+        </span>
+        <span>開催日: {tournament.date}</span>
+        {tournament.participants && <span>参加枠: {tournament.participants}名</span>}
+        {tournament.prize && <span>賞金: {tournament.prize}</span>}
+      </div>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="space-content container">
+      <div class="prose max-w-none" set:html={tournament.content} />
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <a href="/tournaments" class="btn btn-primary">← 大会情報一覧に戻る</a>
+    </div>
+  </section>
+</DefaultLayout>
+
+<style>
+  .prose {
+    line-height: 1.8;
+  }
+  .prose h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .prose p {
+    margin-bottom: 1rem;
+  }
+  .prose ol,
+  .prose ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+</style>

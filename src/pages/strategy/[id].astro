@@ -1,0 +1,127 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+export async function getStaticPaths() {
+  // 実際のデータは後でContent Collectionsやデータベースから取得
+  const strategies = [
+    {
+      id: '1',
+      title: '初心者向けガイド',
+      category: '基本',
+      content: `
+## はじめに
+
+このガイドでは、ゲームを始めたばかりの方向けに基本的な操作方法や序盤の進め方を解説します。
+
+## 基本操作
+
+- 移動: WASD または 矢印キー
+- ジャンプ: スペースキー
+- アクション: マウス左クリック
+
+## 序盤の進め方
+
+1. チュートリアルをクリアする
+2. 最初のキャラクターを獲得する
+3. ストーリーモードを進める
+
+## まとめ
+
+まずは基本を覚えて、ゲームに慣れていきましょう。
+      `,
+      lastUpdated: '2025-12-20',
+    },
+    {
+      id: '2',
+      title: 'キャラクター育成法',
+      category: '育成',
+      content: `
+## キャラクター育成の基本
+
+効率的な育成方法について解説します。
+
+## 優先すべき育成要素
+
+1. レベル上げ
+2. スキル強化
+3. 装備の強化
+
+## おすすめの育成ルート
+
+詳細な育成ルートについて説明します。
+      `,
+      lastUpdated: '2025-12-18',
+    },
+    {
+      id: '3',
+      title: '上級者向けテクニック',
+      category: '上級',
+      content: `
+## 上級テクニック
+
+競技レベルで活躍するためのテクニックを紹介します。
+
+## コンボテクニック
+
+高度なコンボの組み方を解説します。
+
+## 立ち回りのコツ
+
+実戦で使える立ち回りについて説明します。
+      `,
+      lastUpdated: '2025-12-15',
+    },
+  ]
+
+  return strategies.map((strategy) => ({
+    params: { id: strategy.id },
+    props: { strategy },
+  }))
+}
+
+const { strategy } = Astro.props
+---
+
+<DefaultLayout title={strategy.title} description={`${strategy.title}の詳細な攻略情報`}>
+  <section class="my-12">
+    <div class="space-content container">
+      <a href="/strategy" class="text-sm hover:underline">← 攻略情報一覧に戻る</a>
+      <h1 class="mt-4">{strategy.title}</h1>
+      <p class="text-sm text-gray-600">
+        カテゴリー: {strategy.category} | 最終更新: {strategy.lastUpdated}
+      </p>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="space-content container">
+      <div class="prose max-w-none" set:html={strategy.content} />
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <a href="/strategy" class="btn btn-primary">← 攻略情報一覧に戻る</a>
+    </div>
+  </section>
+</DefaultLayout>
+
+<style>
+  .prose {
+    line-height: 1.8;
+  }
+  .prose h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  .prose p {
+    margin-bottom: 1rem;
+  }
+  .prose ol,
+  .prose ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+</style>

@@ -1,0 +1,102 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import { Card } from 'accessible-astro-components'
+
+// ツールのサンプルデータ
+const tools = [
+  {
+    id: 1,
+    title: 'ダメージ計算機',
+    description: 'キャラクターのダメージを正確に計算できるツールです。',
+    category: '計算ツール',
+    icon: '🔢',
+  },
+  {
+    id: 2,
+    title: 'チーム編成シミュレーター',
+    description: '最適なチーム編成をシミュレートできます。',
+    category: 'シミュレーター',
+    icon: '👥',
+  },
+  {
+    id: 3,
+    title: 'キャラクターデータベース',
+    description: '全キャラクターのステータスやスキルを検索できます。',
+    category: 'データベース',
+    icon: '📊',
+  },
+  {
+    id: 4,
+    title: 'タイマー・ストップウォッチ',
+    description: 'トレーニングや大会用のタイマーツールです。',
+    category: 'ユーティリティ',
+    icon: '⏱️',
+  },
+]
+---
+
+<DefaultLayout
+  title="便利ツール"
+  description="ゲームプレイに役立つ便利ツール集。ダメージ計算機、シミュレーター、データベースなど"
+>
+  <section class="my-12">
+    <div class="space-content container">
+      <h1>便利ツール</h1>
+      <p class="text-2xl">
+        ゲームプレイをサポートする便利なツールを提供しています。
+      </p>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <div class="mb-6">
+        <label for="tool-category-filter" class="mr-2">カテゴリー:</label>
+        <select id="tool-category-filter" class="px-4 py-2 border rounded">
+          <option value="all">すべて</option>
+          <option value="計算ツール">計算ツール</option>
+          <option value="シミュレーター">シミュレーター</option>
+          <option value="データベース">データベース</option>
+          <option value="ユーティリティ">ユーティリティ</option>
+        </select>
+      </div>
+
+      <ul class="my-3">
+        {
+          tools.map((tool) => (
+            <li data-category={tool.category}>
+              <Card
+                url={`/tools/${tool.id}`}
+                title={`${tool.icon} ${tool.title}`}
+                footer={`カテゴリー: ${tool.category}`}
+              >
+                {tool.description}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</DefaultLayout>
+
+<script>
+  // カテゴリーフィルター機能
+  const filterSelect = document.getElementById('tool-category-filter')
+  const toolItems = document.querySelectorAll('[data-category]')
+
+  if (filterSelect) {
+    filterSelect.addEventListener('change', (e) => {
+      const selectedCategory = (e.target as HTMLSelectElement).value
+
+      toolItems.forEach((item) => {
+        const category = item.getAttribute('data-category')
+        if (selectedCategory === 'all' || category === selectedCategory) {
+          ;(item as HTMLElement).style.display = 'block'
+        } else {
+          ;(item as HTMLElement).style.display = 'none'
+        }
+      })
+    })
+  }
+</script>

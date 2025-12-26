@@ -1,0 +1,244 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+
+export async function getStaticPaths() {
+  const tools = [
+    {
+      id: '1',
+      title: 'ダメージ計算機',
+      category: '計算ツール',
+      icon: '🔢',
+      description: 'キャラクターのダメージを正確に計算できるツールです。',
+    },
+    {
+      id: '2',
+      title: 'チーム編成シミュレーター',
+      category: 'シミュレーター',
+      icon: '👥',
+      description: '最適なチーム編成をシミュレートできます。',
+    },
+    {
+      id: '3',
+      title: 'キャラクターデータベース',
+      category: 'データベース',
+      icon: '📊',
+      description: '全キャラクターのステータスやスキルを検索できます。',
+    },
+    {
+      id: '4',
+      title: 'タイマー・ストップウォッチ',
+      category: 'ユーティリティ',
+      icon: '⏱️',
+      description: 'トレーニングや大会用のタイマーツールです。',
+    },
+  ]
+
+  return tools.map((tool) => ({
+    params: { id: tool.id },
+    props: { tool },
+  }))
+}
+
+const { tool } = Astro.props
+---
+
+<DefaultLayout title={tool.title} description={tool.description}>
+  <section class="my-12">
+    <div class="space-content container">
+      <a href="/tools" class="text-sm hover:underline">← ツール一覧に戻る</a>
+      <h1 class="mt-4">{tool.icon} {tool.title}</h1>
+      <p class="text-sm text-gray-600">カテゴリー: {tool.category}</p>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+        {
+          tool.id === '1' && (
+            <div class="damage-calculator">
+              <h2 class="text-2xl font-bold mb-4">ダメージ計算</h2>
+              <div class="space-y-4">
+                <div>
+                  <label for="base-attack" class="block mb-2">
+                    基礎攻撃力:
+                  </label>
+                  <input
+                    type="number"
+                    id="base-attack"
+                    class="w-full px-4 py-2 border rounded"
+                    placeholder="100"
+                  />
+                </div>
+                <div>
+                  <label for="skill-multiplier" class="block mb-2">
+                    スキル倍率 (%):
+                  </label>
+                  <input
+                    type="number"
+                    id="skill-multiplier"
+                    class="w-full px-4 py-2 border rounded"
+                    placeholder="150"
+                  />
+                </div>
+                <div>
+                  <label for="enemy-defense" class="block mb-2">
+                    敵の防御力:
+                  </label>
+                  <input
+                    type="number"
+                    id="enemy-defense"
+                    class="w-full px-4 py-2 border rounded"
+                    placeholder="50"
+                  />
+                </div>
+                <button
+                  id="calculate-damage"
+                  class="bg-primary-500 text-white px-6 py-3 rounded hover:bg-primary-600"
+                >
+                  計算する
+                </button>
+                <div id="damage-result" class="text-xl font-bold mt-4" />
+              </div>
+            </div>
+          )
+        }
+        {
+          tool.id === '2' && (
+            <div class="team-simulator">
+              <h2 class="text-2xl font-bold mb-4">チーム編成</h2>
+              <p>チーム編成シミュレーターは現在開発中です。</p>
+            </div>
+          )
+        }
+        {
+          tool.id === '3' && (
+            <div class="character-database">
+              <h2 class="text-2xl font-bold mb-4">キャラクター検索</h2>
+              <input
+                type="text"
+                id="character-search"
+                class="w-full px-4 py-2 border rounded mb-4"
+                placeholder="キャラクター名を入力..."
+              />
+              <div id="search-results">
+                <p>キャラクターデータベースは現在開発中です。</p>
+              </div>
+            </div>
+          )
+        }
+        {
+          tool.id === '4' && (
+            <div class="timer-tool">
+              <h2 class="text-2xl font-bold mb-4">タイマー</h2>
+              <div class="text-center">
+                <div id="timer-display" class="text-6xl font-mono mb-4">
+                  00:00:00
+                </div>
+                <div class="flex gap-4 justify-center">
+                  <button
+                    id="start-timer"
+                    class="bg-green-500 text-white px-6 py-3 rounded hover:bg-green-600"
+                  >
+                    開始
+                  </button>
+                  <button
+                    id="stop-timer"
+                    class="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600"
+                  >
+                    停止
+                  </button>
+                  <button
+                    id="reset-timer"
+                    class="bg-gray-500 text-white px-6 py-3 rounded hover:bg-gray-600"
+                  >
+                    リセット
+                  </button>
+                </div>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <a href="/tools" class="btn btn-primary">← ツール一覧に戻る</a>
+    </div>
+  </section>
+</DefaultLayout>
+
+<script>
+  // ダメージ計算機のロジック
+  const calculateBtn = document.getElementById('calculate-damage')
+  if (calculateBtn) {
+    calculateBtn.addEventListener('click', () => {
+      const baseAttack = parseFloat(
+        (document.getElementById('base-attack') as HTMLInputElement)?.value || '0'
+      )
+      const skillMultiplier = parseFloat(
+        (document.getElementById('skill-multiplier') as HTMLInputElement)?.value || '0'
+      )
+      const enemyDefense = parseFloat(
+        (document.getElementById('enemy-defense') as HTMLInputElement)?.value || '0'
+      )
+
+      const damage = Math.floor((baseAttack * (skillMultiplier / 100) * (100 - enemyDefense)) / 100)
+      const resultEl = document.getElementById('damage-result')
+      if (resultEl) {
+        resultEl.textContent = `予想ダメージ: ${damage}`
+      }
+    })
+  }
+
+  // タイマーのロジック
+  let timerInterval: number | null = null
+  let timerSeconds = 0
+
+  const timerDisplay = document.getElementById('timer-display')
+  const startBtn = document.getElementById('start-timer')
+  const stopBtn = document.getElementById('stop-timer')
+  const resetBtn = document.getElementById('reset-timer')
+
+  function updateTimerDisplay() {
+    const hours = Math.floor(timerSeconds / 3600)
+    const minutes = Math.floor((timerSeconds % 3600) / 60)
+    const seconds = timerSeconds % 60
+    if (timerDisplay) {
+      timerDisplay.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+    }
+  }
+
+  if (startBtn) {
+    startBtn.addEventListener('click', () => {
+      if (!timerInterval) {
+        timerInterval = window.setInterval(() => {
+          timerSeconds++
+          updateTimerDisplay()
+        }, 1000)
+      }
+    })
+  }
+
+  if (stopBtn) {
+    stopBtn.addEventListener('click', () => {
+      if (timerInterval) {
+        clearInterval(timerInterval)
+        timerInterval = null
+      }
+    })
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (timerInterval) {
+        clearInterval(timerInterval)
+        timerInterval = null
+      }
+      timerSeconds = 0
+      updateTimerDisplay()
+    })
+  }
+</script>

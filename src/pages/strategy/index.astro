@@ -1,0 +1,94 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import { Card } from 'accessible-astro-components'
+
+// 攻略情報のサンプルデータ
+const strategies = [
+  {
+    id: 1,
+    title: '初心者向けガイド',
+    description: 'ゲームを始めたばかりの方向けの基本的な攻略情報です。',
+    category: '基本',
+    lastUpdated: '2025-12-20',
+  },
+  {
+    id: 2,
+    title: 'キャラクター育成法',
+    description: 'キャラクターを効率的に育成するための方法を解説します。',
+    category: '育成',
+    lastUpdated: '2025-12-18',
+  },
+  {
+    id: 3,
+    title: '上級者向けテクニック',
+    description: '競技レベルで活躍するための高度なテクニックを紹介します。',
+    category: '上級',
+    lastUpdated: '2025-12-15',
+  },
+]
+---
+
+<DefaultLayout
+  title="攻略情報"
+  description="ゲームの攻略情報、初心者ガイド、キャラクター育成、上級テクニックなど"
+>
+  <section class="my-12">
+    <div class="space-content container">
+      <h1>攻略情報</h1>
+      <p class="text-2xl">
+        初心者から上級者まで、あらゆるレベルのプレイヤーに役立つ攻略情報をまとめています。
+      </p>
+    </div>
+  </section>
+
+  <section class="my-12">
+    <div class="container">
+      <div class="mb-6">
+        <label for="category-filter" class="mr-2">カテゴリー:</label>
+        <select id="category-filter" class="px-4 py-2 border rounded">
+          <option value="all">すべて</option>
+          <option value="基本">基本</option>
+          <option value="育成">育成</option>
+          <option value="上級">上級</option>
+        </select>
+      </div>
+
+      <ul class="my-3">
+        {
+          strategies.map((strategy) => (
+            <li data-category={strategy.category}>
+              <Card
+                url={`/strategy/${strategy.id}`}
+                title={strategy.title}
+                footer={`カテゴリー: ${strategy.category} | 最終更新: ${strategy.lastUpdated}`}
+              >
+                {strategy.description}
+              </Card>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</DefaultLayout>
+
+<script>
+  // カテゴリーフィルター機能
+  const filterSelect = document.getElementById('category-filter')
+  const strategyItems = document.querySelectorAll('[data-category]')
+
+  if (filterSelect) {
+    filterSelect.addEventListener('change', (e) => {
+      const selectedCategory = (e.target as HTMLSelectElement).value
+
+      strategyItems.forEach((item) => {
+        const category = item.getAttribute('data-category')
+        if (selectedCategory === 'all' || category === selectedCategory) {
+          ;(item as HTMLElement).style.display = 'block'
+        } else {
+          ;(item as HTMLElement).style.display = 'none'
+        }
+      })
+    })
+  }
+</script>

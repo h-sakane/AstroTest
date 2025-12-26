@@ -9,6 +9,36 @@ import { Accordion, AccordionItem } from 'accessible-astro-components'
 
 <DefaultLayout title="Home">
   <GameHero />
+  
+  <!-- コンテンツへのクイックリンク -->
+  <section class="my-32">
+    <div class="container">
+      <h2 class="mb-12 text-5xl text-center font-bold">サイトコンテンツ</h2>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <a href="/strategy" class="quick-link-card">
+          <div class="card-icon">📚</div>
+          <h3 class="card-title">攻略情報</h3>
+          <p class="card-description">初心者から上級者まで役立つ攻略ガイド</p>
+        </a>
+        <a href="/tournaments" class="quick-link-card">
+          <div class="card-icon">🏆</div>
+          <h3 class="card-title">大会情報</h3>
+          <p class="card-description">開催予定の大会や過去の結果</p>
+        </a>
+        <a href="/tools" class="quick-link-card">
+          <div class="card-icon">🛠️</div>
+          <h3 class="card-title">便利ツール</h3>
+          <p class="card-description">ダメージ計算機やシミュレーター</p>
+        </a>
+        <a href="/gallery" class="quick-link-card">
+          <div class="card-icon">🎨</div>
+          <h3 class="card-title">ギャラリー</h3>
+          <p class="card-description">ファンアート作品集</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <section class="my-64">
     <div class="container">
       <h2 class="mb-16 text-6xl">Features</h2>
@@ -130,3 +160,40 @@ import { Accordion, AccordionItem } from 'accessible-astro-components'
     </div>
   </section>
 </DefaultLayout>
+
+<style>
+  .quick-link-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    background: var(--neutral-background);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--font-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .quick-link-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-description {
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+</style>

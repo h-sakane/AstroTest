@@ -1,0 +1,427 @@
+---
+import DefaultLayout from '../layouts/DefaultLayout.astro'
+
+// アーティストごとのイラストデータ
+const artists = [
+  {
+    id: 1,
+    name: 'アーティストA',
+    username: '@artist_a',
+    artworks: [
+      { id: 1, title: '作品1', thumbnail: 'https://via.placeholder.com/300x400/667eea/ffffff?text=Art+1' },
+      { id: 2, title: '作品2', thumbnail: 'https://via.placeholder.com/300x400/764ba2/ffffff?text=Art+2' },
+      { id: 3, title: '作品3', thumbnail: 'https://via.placeholder.com/300x400/f093fb/ffffff?text=Art+3' },
+      { id: 4, title: '作品4', thumbnail: 'https://via.placeholder.com/300x400/4facfe/ffffff?text=Art+4' },
+      { id: 5, title: '作品5', thumbnail: 'https://via.placeholder.com/300x400/00f2fe/ffffff?text=Art+5' },
+    ],
+  },
+  {
+    id: 2,
+    name: 'アーティストB',
+    username: '@artist_b',
+    artworks: [
+      { id: 6, title: '作品6', thumbnail: 'https://via.placeholder.com/300x400/43e97b/ffffff?text=Art+6' },
+      { id: 7, title: '作品7', thumbnail: 'https://via.placeholder.com/300x400/38f9d7/ffffff?text=Art+7' },
+      { id: 8, title: '作品8', thumbnail: 'https://via.placeholder.com/300x400/fa709a/ffffff?text=Art+8' },
+      { id: 9, title: '作品9', thumbnail: 'https://via.placeholder.com/300x400/fee140/ffffff?text=Art+9' },
+    ],
+  },
+  {
+    id: 3,
+    name: 'アーティストC',
+    username: '@artist_c',
+    artworks: [
+      { id: 10, title: '作品10', thumbnail: 'https://via.placeholder.com/300x400/30cfd0/ffffff?text=Art+10' },
+      { id: 11, title: '作品11', thumbnail: 'https://via.placeholder.com/300x400/330867/ffffff?text=Art+11' },
+      { id: 12, title: '作品12', thumbnail: 'https://via.placeholder.com/300x400/a8edea/ffffff?text=Art+12' },
+      { id: 13, title: '作品13', thumbnail: 'https://via.placeholder.com/300x400/fed6e3/ffffff?text=Art+13' },
+      { id: 14, title: '作品14', thumbnail: 'https://via.placeholder.com/300x400/ffa8a8/ffffff?text=Art+14' },
+      { id: 15, title: '作品15', thumbnail: 'https://via.placeholder.com/300x400/fcff9e/ffffff?text=Art+15' },
+    ],
+  },
+]
+---
+
+<DefaultLayout
+  title="イラストギャラリー"
+  description="ゲームに関連したファンアートを作者ごとに展示しています"
+>
+  <section class="my-12">
+    <div class="space-content container">
+      <h1>イラストギャラリー</h1>
+      <p class="text-2xl">
+        ゲームに関連した素晴らしいイラストを作者ごとに展示しています。
+      </p>
+    </div>
+  </section>
+
+  {
+    artists.map((artist) => (
+      <section class="my-12">
+        <div class="container">
+          <div class="mb-4">
+            <h2 class="text-3xl font-bold">{artist.name}</h2>
+            <p class="text-gray-600">{artist.username}</p>
+          </div>
+
+          {/* アーティストID1: 横スクロールギャラリー */}
+          {artist.id === 1 && (
+            <div class="gallery-scroll-container">
+              <div class="gallery-scroll">
+                {artist.artworks.map((artwork) => (
+                  <div class="gallery-item">
+                    <img
+                      src={artwork.thumbnail}
+                      alt={artwork.title}
+                      class="gallery-image"
+                      loading="lazy"
+                    />
+                    <p class="gallery-title">{artwork.title}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* アーティストID2: グリッド + Lightbox */}
+          {artist.id === 2 && (
+            <div class="grid-gallery">
+              {artist.artworks.map((artwork) => (
+                <div
+                  class="grid-item"
+                  data-artwork-id={artwork.id}
+                  data-artwork-title={artwork.title}
+                  data-artwork-src={artwork.thumbnail}
+                >
+                  <img
+                    src={artwork.thumbnail}
+                    alt={artwork.title}
+                    class="grid-image"
+                    loading="lazy"
+                  />
+                  <div class="grid-overlay">
+                    <span class="view-icon">🔍</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* アーティストID3: Masonry（Pinterest風） */}
+          {artist.id === 3 && (
+            <div class="masonry-gallery">
+              {artist.artworks.map((artwork, index) => (
+                <div class={`masonry-item masonry-height-${(index % 3) + 1}`}>
+                  <img
+                    src={artwork.thumbnail}
+                    alt={artwork.title}
+                    class="masonry-image"
+                    loading="lazy"
+                  />
+                  <div class="masonry-caption">
+                    <p>{artwork.title}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    ))
+  }
+</DefaultLayout>
+
+<!-- Lightbox モーダル -->
+<div id="lightbox" class="lightbox">
+  <span class="lightbox-close">&times;</span>
+  <img class="lightbox-content" id="lightbox-img" />
+  <div id="lightbox-caption"></div>
+</div>
+
+<script>
+  // Lightbox機能
+  const lightbox = document.getElementById('lightbox')
+  const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement
+  const lightboxCaption = document.getElementById('lightbox-caption')
+  const closeBtn = document.querySelector('.lightbox-close')
+
+  // グリッドアイテムにクリックイベントを追加
+  document.querySelectorAll('.grid-item').forEach((item) => {
+    item.addEventListener('click', () => {
+      const src = item.getAttribute('data-artwork-src')
+      const title = item.getAttribute('data-artwork-title')
+
+      if (lightbox && lightboxImg && lightboxCaption && src && title) {
+        lightbox.style.display = 'flex'
+        lightboxImg.src = src
+        lightboxCaption.textContent = title
+        document.body.style.overflow = 'hidden'
+      }
+    })
+  })
+
+  // モーダルを閉じる
+  function closeLightbox() {
+    if (lightbox) {
+      lightbox.style.display = 'none'
+      document.body.style.overflow = 'auto'
+    }
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeLightbox)
+  }
+
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox()
+      }
+    })
+  }
+
+  // ESCキーでモーダルを閉じる
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeLightbox()
+    }
+  })
+</script>
+
+<style lang="scss">
+  /* スタイル1: 横スクロールギャラリー */
+  .gallery-scroll-container {
+    position: relative;
+    overflow: hidden;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+
+    @media (min-width: 768px) {
+      margin: 0 -2rem;
+      padding: 0 2rem;
+    }
+  }
+
+  .gallery-scroll {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 4px;
+
+      &:hover {
+        background: #555;
+      }
+    }
+  }
+
+  .gallery-item {
+    flex: 0 0 auto;
+    width: 250px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-8px);
+    }
+
+    @media (min-width: 768px) {
+      width: 300px;
+    }
+  }
+
+  .gallery-image {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .gallery-title {
+    margin-top: 0.5rem;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* スタイル2: グリッド + Lightbox */
+  .grid-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .grid-item {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+
+      .grid-overlay {
+        opacity: 1;
+      }
+    }
+  }
+
+  .grid-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .view-icon {
+    font-size: 3rem;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .lightbox-content {
+    max-width: 90%;
+    max-height: 80vh;
+    object-fit: contain;
+    animation: zoomIn 0.3s ease;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #ccc;
+    }
+  }
+
+  #lightbox-caption {
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 1.2rem;
+  }
+
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* スタイル3: Masonry（Pinterest風） */
+  .masonry-gallery {
+    column-count: 1;
+    column-gap: 1.5rem;
+
+    @media (min-width: 640px) {
+      column-count: 2;
+    }
+
+    @media (min-width: 1024px) {
+      column-count: 3;
+    }
+  }
+
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+    background: var(--neutral-background);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .masonry-height-1 .masonry-image {
+    height: 250px;
+  }
+
+  .masonry-height-2 .masonry-image {
+    height: 350px;
+  }
+
+  .masonry-height-3 .masonry-image {
+    height: 300px;
+  }
+
+  .masonry-image {
+    width: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .masonry-caption {
+    padding: 1rem;
+    text-align: center;
+
+    p {
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+</style>
